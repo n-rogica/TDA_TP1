@@ -4,7 +4,7 @@ import os
 
 def genArchivosRandom(cantRecitales, cantBandas,
 maxBandasDistintasAContratar, maxRecitalesAParticiparPorBanda):
-    print ("archivos random")
+    print ("start gen archivos random")
 
     #creo archivos de recitales
     for numRecital in range(1,cantRecitales+1):
@@ -23,6 +23,8 @@ maxBandasDistintasAContratar, maxRecitalesAParticiparPorBanda):
         for preferencia in preferencias:
             archivo.write(str(preferencia) + os.linesep)
         archivo.close()
+
+    print ("archivos random gen ok")
 
 def main():
 
