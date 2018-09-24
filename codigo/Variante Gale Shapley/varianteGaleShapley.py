@@ -141,8 +141,6 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
 
 def main():
 
-    argv = [1,10,10,1,1] # TODO: Delete this test line
-    
     if(len(argv) < 5):
         print ("cantidad de parametros incorrecta")
         return
