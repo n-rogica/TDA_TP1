@@ -7,20 +7,19 @@ DATA_PATH = "data/"
 BANDA = "banda"
 RECITAL = "recital"
 
-def genArchivoRandom(cant, nombre):
-    for num in range(1, cant + 1):
+def genArchivoRandom(cantArchivos, cantLineas, nombre):
+    for num in range(1, cantArchivos + 1):
         nombreArchivo = DATA_PATH + nombre + "_" + str(num) + ".dat"
         archivo = open(nombreArchivo, "w")
-        preferencias = random.sample(range(1, cant + 1), cant)
+        preferencias = random.sample(range(1, cantLineas + 1), cantLineas)
         for preferencia in preferencias:
             archivo.write(str(preferencia) + os.linesep)
         archivo.close()
 
 def genArchivosRandom(cantRecitales, cantBandas):
-    print ("start gen archivos random")
 
-    genArchivoRandom(cantRecitales, RECITAL)
-    genArchivoRandom(cantBandas, BANDA)
+    genArchivoRandom(cantRecitales, cantBandas, RECITAL)
+    genArchivoRandom(cantBandas, cantRecitales, BANDA)
 
     print ("archivos random gen ok")
 
@@ -142,8 +141,6 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
 
 def main():
 
-    argv = [False,10,10,1,1] # TODO: Delete this test line
-
     if(len(argv) < 5):
         print ("cantidad de parametros incorrecta")
         return
@@ -151,11 +148,11 @@ def main():
 
         # Parse arguments
 
-        generarArchivos = argv[0] 
-        cantRecitales = int(argv[1]) #N
-        cantBandas = int(argv[2]) #M
-        maxBandasXRecital = int(argv[3]) #X
-        maxRecitalesXBanda = int(argv[4]) #Y
+        generarArchivos = int(argv[0]) # booleano (0, 1)
+        cantRecitales = int(argv[1]) # N: int
+        cantBandas = int(argv[2]) #M: int
+        maxBandasXRecital = int(argv[3]) #X: int
+        maxRecitalesXBanda = int(argv[4]) #Y: int
 
         # Initialize data:
         #   - write/read files
