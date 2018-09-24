@@ -139,6 +139,17 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
     print("match ok")
     return recitalesXbanda
 
+def printResultado(recitalesXBanda):
+    bandas = recitalesXBanda.keys()
+    
+    for banda in bandas:
+        txt = "Banda: " + banda + ". Recitales: "
+        recitales = recitalesXBanda[banda]
+        for recital in recitales:
+            txt += recital + " "
+        print(txt)
+
+
 def main():
 
     if(len(argv) < 5):
@@ -171,6 +182,6 @@ def main():
         recitalesXBanda = match(bandasRanking, recitalesRanking, 
                                 maxBandasXRecital, maxRecitalesXBanda)
 
-        print(recitalesXBanda)
+        printResultado(recitalesXBanda)
 
 main()
