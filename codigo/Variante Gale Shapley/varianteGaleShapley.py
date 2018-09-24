@@ -26,7 +26,7 @@ def genArchivosRandom(cantRecitales, cantBandas):
 def getBandasDic(cant, nombre):
 
     rank = defaultdict(dict)
-    
+
     for num in range(1, cant + 1):
         snum = str(num)
         nombreArchivo = DATA_PATH + nombre + "_" + snum + ".dat"
@@ -41,7 +41,7 @@ def getBandasDic(cant, nombre):
 def getRecitalesDic(cant, nombre):
 
     rank = defaultdict(dict)
-    
+
     for num in range(1, cant + 1):
         snum = str(num)
         nombreArchivo = DATA_PATH + nombre + "_" + snum + ".dat"
@@ -54,7 +54,7 @@ def getRecitalesDic(cant, nombre):
     print("get " + nombre + " dic ok")
     return rank
 
-def init(generarArchivos, cantRecitales, cantBandas, 
+def init(generarArchivos, cantRecitales, cantBandas,
         maxBandasDistintasAContratar, maxRecitalesAParticiparPorBanda):
 
     if generarArchivos:
@@ -70,14 +70,14 @@ def init(generarArchivos, cantRecitales, cantBandas,
 
 # Esta funcion chequea si la banda prefiere el recital nuevo y entonces saca el recital con menos preferencia
 
-def procesarRecitalLleno(banda, recitalNuevo, recitalesXbanda, 
+def procesarRecitalLleno(banda, recitalNuevo, recitalesXbanda,
                         cantBandasXrecital, prefsPorRecital,
                         recitalesLibres, bandasPrefXRecital):
-    
+
     recitalesQueToca = recitalesXbanda[banda]
     ordenMasAlto = prefsPorRecital[recitalNuevo]
     recitalConOrdenMasAlto = recitalNuevo
-    
+
     for recital in recitalesQueToca:
         orden = prefsPorRecital[recital]
         if orden > ordenMasAlto:
@@ -124,7 +124,7 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
                         procesarRecitalLleno(banda,
                                             recital,
                                             recitalesXbanda,
-                                            cantBandasXrecital, 
+                                            cantBandasXrecital,
                                             recitalesPrefXBanda[banda],
                                             recitalesLibres,
                                             bandasPrefXRecital)
@@ -135,13 +135,13 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
             else:
                 # Recital esta lleno -> Paso al siguiente
                 break
-                
+
     print("match ok")
     return recitalesXbanda
 
 def printResultado(recitalesXBanda):
     bandas = recitalesXBanda.keys()
-    
+
     for banda in bandas:
         txt = "Banda: " + banda + ". Recitales: "
         recitales = recitalesXBanda[banda]
@@ -152,18 +152,18 @@ def printResultado(recitalesXBanda):
 
 def main():
 
-    if(len(argv) < 5):
+    if(len(argv) < 6):
         print ("cantidad de parametros incorrecta")
         return
     else:
 
         # Parse arguments
 
-        generarArchivos = int(argv[0]) # booleano (0, 1)
-        cantRecitales = int(argv[1]) # N: int
-        cantBandas = int(argv[2]) #M: int
-        maxBandasXRecital = int(argv[3]) #X: int
-        maxRecitalesXBanda = int(argv[4]) #Y: int
+        generarArchivos = int(argv[1]) # booleano (0, 1)
+        cantRecitales = int(argv[2]) # N: int
+        cantBandas = int(argv[3]) #M: int
+        maxBandasXRecital = int(argv[4]) #X: int
+        maxRecitalesXBanda = int(argv[5]) #Y: int
 
         # Initialize data:
         #   - write/read files
@@ -171,15 +171,15 @@ def main():
         #       - bandasRanking = [BAND_ID][RECITAL_ID] = PREFERENCE ORDER
         #       - recitalesRanking = [RECITAL_ID] = List(BAND_ID)
 
-        data = init(generarArchivos, cantRecitales, cantBandas, 
+        data = init(generarArchivos, cantRecitales, cantBandas,
             maxBandasXRecital, maxRecitalesXBanda)
 
         bandasRanking = data[BANDA]
         recitalesRanking = data[RECITAL]
 
         # Perform matching
-        
-        recitalesXBanda = match(bandasRanking, recitalesRanking, 
+
+        recitalesXBanda = match(bandasRanking, recitalesRanking,
                                 maxBandasXRecital, maxRecitalesXBanda)
 
         printResultado(recitalesXBanda)
