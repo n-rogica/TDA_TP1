@@ -69,8 +69,10 @@ def init(generarArchivos, cantRecitales, cantBandas,
 
     return ranking
 
-def bandaPrefiereEsteRecital(banda, recitalNuevo, recitalesXbanda, 
-                            bandasXRecital, prefsPorRecital):
+# Esta funcion chequea si la banda prefiere el recital nuevo y entonces saca el recital con menos preferencia
+
+def procesarRecitalLleno(banda, recitalNuevo, recitalesXbanda, 
+                            cantBandasXrecital, prefsPorRecital):
     
     recitalesQueToca = recitalesXbanda[banda]
     ordenMasAlto = prefsPorRecital[recitalNuevo]
@@ -88,12 +90,14 @@ def bandaPrefiereEsteRecital(banda, recitalNuevo, recitalesXbanda,
         for i, recital in enumerate(recitales):
             if recital == recitalConOrdenMasAlto:
                 recitales.pop(i)
+                cantBandasXrecital[recital] -= 1
         recitales.append(recitalNuevo)
+        cantBandasXrecital[recitalNuevo] += 1
 
 def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecitalesXBanda):
 
     # [Recital, Bandas]
-    bandasXrecital = dict()
+    cantBandasXrecital = dict()
     # [Banda, Recitales]
     recitalesXbanda = dict()
 
@@ -102,29 +106,24 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
     while (len(recitalesLibres) > 0):
         recital = recitalesLibres.pop(0)
         bandasPreferidas = bandasPrefXRecital[recital]
-        bandasXrecital[recital] = list()
+        cantBandasXrecital[recital] = 0
         while (len(bandasPreferidas) > 0):
-            bandasEnRecital = bandasXrecital[recital]
-            if (len(bandasEnRecital) < maxBandasXRecital):
+            if (cantBandasXrecital[recital] < maxBandasXRecital):
                 banda = bandasPreferidas.pop(0)
                 if banda in recitalesXbanda:
                     # la banda ya esta asociada a uno o mas recital/es
                     recitalesQueTocaBanda = recitalesXbanda[banda]
                     if (len(recitalesQueTocaBanda) < maxRecitalesXBanda):
-                        bandasXrecital[recital].append(banda)
+                        cantBandasXrecital[recital] += 1
                         recitalesXbanda[banda].append(recital)
                     else:
-                        bandaPrefiereEsteRecital(banda,
-                                                recital,
-                                                recitalesXbanda,
-                                                bandasXrecital,
-                                                recitalesPrefXBanda[banda])
-
-                        print("a")
+                        procesarRecitalLleno(banda, recital, recitalesXbanda,
+                                            cantBandasXrecital, 
+                                            recitalesPrefXBanda[banda])
                 else:
                     recitalesXbanda[banda] = list()
                     recitalesXbanda[banda].append(recital)
-                    bandasXrecital[recital].append(banda)
+                    cantBandasXrecital[recital] += 1
             else:
                 # Recital esta lleno -> Paso al siguiente
                 break
