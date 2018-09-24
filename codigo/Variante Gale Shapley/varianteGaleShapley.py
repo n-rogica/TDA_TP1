@@ -72,7 +72,8 @@ def init(generarArchivos, cantRecitales, cantBandas,
 # Esta funcion chequea si la banda prefiere el recital nuevo y entonces saca el recital con menos preferencia
 
 def procesarRecitalLleno(banda, recitalNuevo, recitalesXbanda, 
-                            cantBandasXrecital, prefsPorRecital):
+                        cantBandasXrecital, prefsPorRecital,
+                        recitalesLibres, bandasPrefXRecital):
     
     recitalesQueToca = recitalesXbanda[banda]
     ordenMasAlto = prefsPorRecital[recitalNuevo]
@@ -91,12 +92,15 @@ def procesarRecitalLleno(banda, recitalNuevo, recitalesXbanda,
             if recital == recitalConOrdenMasAlto:
                 recitales.pop(i)
                 cantBandasXrecital[recital] -= 1
+                recitalesLibres.append(recital)
+                bandasPrefXRecital[recital].append(banda)
+
         recitales.append(recitalNuevo)
         cantBandasXrecital[recitalNuevo] += 1
 
 def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecitalesXBanda):
 
-    # [Recital, Bandas]
+    # [Recital, Cant Bandas]
     cantBandasXrecital = dict()
     # [Banda, Recitales]
     recitalesXbanda = dict()
@@ -106,20 +110,25 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
     while (len(recitalesLibres) > 0):
         recital = recitalesLibres.pop(0)
         bandasPreferidas = bandasPrefXRecital[recital]
-        cantBandasXrecital[recital] = 0
+        if not recital in cantBandasXrecital:
+            cantBandasXrecital[recital] = 0
         while (len(bandasPreferidas) > 0):
             if (cantBandasXrecital[recital] < maxBandasXRecital):
                 banda = bandasPreferidas.pop(0)
                 if banda in recitalesXbanda:
-                    # la banda ya esta asociada a uno o mas recital/es
+                    # La banda ya esta asociada a uno o mas recital/es
                     recitalesQueTocaBanda = recitalesXbanda[banda]
                     if (len(recitalesQueTocaBanda) < maxRecitalesXBanda):
                         cantBandasXrecital[recital] += 1
                         recitalesXbanda[banda].append(recital)
                     else:
-                        procesarRecitalLleno(banda, recital, recitalesXbanda,
+                        procesarRecitalLleno(banda,
+                                            recital,
+                                            recitalesXbanda,
                                             cantBandasXrecital, 
-                                            recitalesPrefXBanda[banda])
+                                            recitalesPrefXBanda[banda],
+                                            recitalesLibres,
+                                            bandasPrefXRecital)
                 else:
                     recitalesXbanda[banda] = list()
                     recitalesXbanda[banda].append(recital)
@@ -134,7 +143,7 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
 
 def main():
 
-    argv = [False,10,10,2,2] # TODO: Delete this test line
+    argv = [False,10,10,1,1] # TODO: Delete this test line
 
     if(len(argv) < 5):
         print ("cantidad de parametros incorrecta")
@@ -152,8 +161,8 @@ def main():
         # Initialize data:
         #   - write/read files
         #   - get rankings dictionary:
-        #       - [BAND_ID][PREFERENCE ORDER] = RECITAL_ID
-        #       - [RECITAL_ID][PREFERENCE ORDER] = BAND_ID
+        #       - bandasRanking = [BAND_ID][RECITAL_ID] = PREFERENCE ORDER
+        #       - recitalesRanking = [RECITAL_ID] = List(BAND_ID)
 
         data = init(generarArchivos, cantRecitales, cantBandas, 
             maxBandasXRecital, maxRecitalesXBanda)
