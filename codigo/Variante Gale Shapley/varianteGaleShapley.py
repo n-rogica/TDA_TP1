@@ -136,10 +136,9 @@ def match(recitalesPrefXBanda, bandasPrefXRecital, maxBandasXRecital, maxRecital
             else:
                 # Recital esta lleno -> Paso al siguiente
                 break
-
-
-
+                
     print("match ok")
+    return recitalesXbanda
 
 def main():
 
@@ -172,7 +171,9 @@ def main():
 
         # Perform matching
         
-        match(bandasRanking, recitalesRanking, 
-            maxBandasXRecital, maxRecitalesXBanda)
+        recitalesXBanda = match(bandasRanking, recitalesRanking, 
+                                maxBandasXRecital, maxRecitalesXBanda)
+
+        print(recitalesXBanda)
 
 main()
